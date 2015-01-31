@@ -1,4 +1,4 @@
-class Transaction < ActiveRecord::Base
+class Contract < ActiveRecord::Base
   belongs_to :auction
 
   belongs_to :seller, class_name: "User"

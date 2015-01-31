@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :auctions
-  has_many :transactions
+  has_many :contracts
   has_many :comments
   has_many :bids
 end
