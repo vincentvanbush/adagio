@@ -8,4 +8,5 @@ class User < ActiveRecord::Base
   has_many :contracts
   has_many :comments
   has_many :bids
+  has_many :addresses
 end
