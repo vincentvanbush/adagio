@@ -6,4 +6,8 @@ class Contract < ActiveRecord::Base
 
   has_one :seller_comment, class_name: "Comment"
   has_one :buyer_comment, class_name: "Comment"
+
+  validates :auction, presence: true
+  validates :seller, presence: true
+  validates :buyer, presence: true, inequality: { to: :seller }
 end

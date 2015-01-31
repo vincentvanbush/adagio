@@ -3,4 +3,25 @@ class Auction < ActiveRecord::Base
   has_one :contract
   belongs_to :user
   has_many :bids
+
+  validates :category, presence: true
+  validates :user, presence: true
+  validates :price, presence: true, numericality: true
+
+  validates :auction_type, inclusion: {
+    in: %w(instant classic),
+    message: "its type has to be 'instant' or 'classic'"
+  }
+
+  validates :title, presence: true, allow_blank: false, length: {
+    maximum: 40,
+    too_long: "its length has to be up to #{count}"
+  }
+  validates :description, presence: true, allow_blank: false, length: {
+    maximum: 1000,
+    too_long: "its length has to be up to #{count}"
+  }
+
+  validates_datetime :start_date, before: :end_date
+  validates_datetime :finished_at, on_or_before: :end_date
 end
