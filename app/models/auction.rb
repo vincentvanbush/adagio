@@ -24,4 +24,14 @@ class Auction < ActiveRecord::Base
 
   validates_datetime :start_date, before: :end_date
   validates_datetime :finished_at, on_or_before: :end_date
+
+  validate :up_to_one_bid, if: :instant_auction?
+
+  def instant_auction?
+    auction_type == 'instant'
+  end
+
+  def up_to_one_bid
+    errors.add(:bids, "should be limited to 1 for an instant") if bids.count > 1
+  end
 end
