@@ -1,5 +1,5 @@
 class Category < ActiveRecord::Base
-  has_many :auctions
+  has_many :auctions, dependent: :destroy
 
   validates :title, presence: true, allow_blank: false, length: {
     maximum: 30,
