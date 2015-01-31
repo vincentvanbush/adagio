@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150131140616) do
+ActiveRecord::Schema.define(version: 20150131143853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,18 @@ ActiveRecord::Schema.define(version: 20150131140616) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.string  "comment_type"
+    t.string  "content"
+    t.integer "contract_id"
+    t.integer "author_id"
+    t.integer "user_for_id"
+  end
+
+  add_index "comments", ["author_id"], name: "index_comments_on_author_id", using: :btree
+  add_index "comments", ["contract_id"], name: "index_comments_on_contract_id", using: :btree
+  add_index "comments", ["user_for_id"], name: "index_comments_on_user_for_id", using: :btree
+
   create_table "contracts", force: :cascade do |t|
     t.integer "auction_id"
     t.integer "seller_id"
@@ -81,6 +93,9 @@ ActiveRecord::Schema.define(version: 20150131140616) do
   add_foreign_key "auctions", "users"
   add_foreign_key "bids", "auctions"
   add_foreign_key "bids", "users"
+  add_foreign_key "comments", "contracts"
+  add_foreign_key "comments", "users", column: "author_id"
+  add_foreign_key "comments", "users", column: "user_for_id"
   add_foreign_key "contracts", "auctions"
   add_foreign_key "contracts", "users", column: "buyer_id"
   add_foreign_key "contracts", "users", column: "seller_id"

@@ -1,4 +1,5 @@
 class Comment < ActiveRecord::Base
   belongs_to :contract
-  belongs_to :user
+  has_one :author
+  belongs_to :user_for
 end
