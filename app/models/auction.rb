@@ -15,15 +15,14 @@ class Auction < ActiveRecord::Base
 
   validates :title, presence: true, allow_blank: false, length: {
     maximum: 40,
-    too_long: "its length has to be up to #{count}"
+    too_long: "its length has to be up to 40"
   }
   validates :description, presence: true, allow_blank: false, length: {
     maximum: 1000,
-    too_long: "its length has to be up to #{count}"
+    too_long: "its length has to be up to 1000"
   }
 
   validates_datetime :start_date, before: :end_date
-  validates_datetime :finished_at, on_or_before: :end_date, if: :is_finished?
 
   validate :up_to_one_bid, if: :instant_auction?
 

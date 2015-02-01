@@ -1,7 +1,8 @@
 class Comment < ActiveRecord::Base
   belongs_to :contract
-  has_one :author
-  belongs_to :user_for
+
+  belongs_to :author, class_name: "User", foreign_key: :author_id
+  belongs_to :user_for, class_name: "User", foreign_key: :user_for_id
 
   validates :comment_type, presence: true, inclusion: {
     in: %w(positive negative neutral),
