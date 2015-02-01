@@ -8,31 +8,52 @@
 user = CreateAdminService.new.call
 puts 'CREATED ADMIN USER: ' << user.email
 
+puts 'Creating users...'
 10.times do
   user = User.find_or_create_by!(email: Faker::Internet.email) do |user|
     user.password = 'testtest'
   end
 end
 
+puts 'Creating categories...'
 5.times do
   category = Category.create!(title: Faker::Commerce.department)
 
+  puts "Creating auctions for category #{category.title}..."
   20.times do |i|
-    start_date = Faker::Time.between(1.week.ago, Time.now, :all)
-    end_date = Faker::Time.between(Time.now, 2.weeks.from_now, :all)
-    print "#{start_date}, #{end_date} \n"
     auction = category.auctions.create!(
       title:        Faker::Commerce.product_name,
       description:  Faker::Lorem.paragraphs(2),
       auction_type: %w(classic instant)[rand 2],
-      start_date:   start_date,
-      end_date:     end_date,
+      start_date:   Faker::Time.between(1.week.ago, 3.hours.ago, :all),
+      end_date:     Faker::Time.between(Time.now, 2.weeks.from_now, :all),
       price:        Faker::Commerce.price,
       user:         User.all[i % User.count]
     )
 
-    if rand(4) == 0 # for every average of 4 auctions, let it be finished
-
+    if rand(4) == 0 # for every average of 4 auctions, give it a contract
+      puts "Creating contract for auction #{auction.title}..."
+      contract = Contract.create!(
+        auction: auction,
+        buyer: User.all[rand(User.count)]
+      )
+      contract.update!(
+        seller_comment_id: Comment.create!(
+          comment_type: %w(negative positive neutral)[rand 3],
+          content:      Faker::Lorem.paragraphs(1),
+          contract:     contract,
+          author:       auction.user,
+          user_for:     contract.buyer
+        ).id,
+        buyer_comment_id: Comment.create!(
+          comment_type: %w(negative positive neutral)[rand 3],
+          content:      Faker::Lorem.paragraphs(1),
+          contract:     contract,
+          author:       contract.buyer,
+          user_for:     auction.user
+        ).id
+      )
+      auction.update!(contract_id: contract.id)
     end
   end
 end
