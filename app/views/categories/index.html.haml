@@ -1,2 +1,44 @@
-%h1 Categories#index
-%p Find me in app/views/categories/index.html.haml
+-# - categories.each do |category|
+-#   .row
+-#     =link_to category.title, category
+
+.col-md-12
+  %h1
+    Categories
+    - if current_user && current_user.admin?
+      %small.float-right
+        = link_to new_category_path do
+          %span.glyphicon.glyphicon-plus
+          New Category
+- if categories.empty?
+  There are no categories. Why not
+  =link_to 'create one just now?', new_category_path
+- categories.each_slice(3) do |slice|
+  .row
+    - slice.each do |category|
+      .col-md-4
+        .panel.panel-default
+          .panel-heading
+            %h3.no-vertical-margins
+              = link_to category.title, category
+              - if current_user && current_user.admin?
+                %small.float-right
+                = link_to edit_category_path(category) do
+                  %span.glyphicon.glyphicon-edit
+                  Edit
+                = link_to category, method: :delete, data: { confirm: 'Are you sure?' } do
+                  %span.glyphicon.glyphicon-remove
+                  Remove
+          .panel-body
+            - if category.auctions.empty?
+              No auctions in this category. Yet.
+            %ol
+              - category.latest_five_auctions.each do |auction|
+                %li= link_to auction.title, category_auction_path(category, auction)
+            .clear-both
+              %p.left
+
+              %p.right
+                = link_to category_auctions_path(category) do
+                  %span.glyphicon.glyphicon-th-list
+                  Show all auctions
