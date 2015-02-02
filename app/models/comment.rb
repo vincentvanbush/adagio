@@ -1,5 +1,5 @@
 class Comment < ActiveRecord::Base
-  belongs_to :contract
+  belongs_to :auction
 
   belongs_to :author, class_name: "User", foreign_key: :author_id
   belongs_to :user_for, class_name: "User", foreign_key: :user_for_id
@@ -10,5 +10,5 @@ class Comment < ActiveRecord::Base
   }
   validates :author, presence: true
   validates :user_for, presence: true
-  validates :contract, presence: true
+  validates :auction, presence: true
 end

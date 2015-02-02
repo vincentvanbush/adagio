@@ -15,10 +15,10 @@
       %td.left Price
       %td
         = auction.current_price
-        - if auction.contract.nil?
-          = link_to "(Make a bid)", new_category_auction_bid_url(category, auction)
-        - else
-          = "(Finished - won by #{contract.buyer.email})"
+        -# - if auction.contract.nil?
+        = link_to "(Make a bid)", new_category_auction_bid_url(category, auction)
+        -# - else
+        -#   = "(Finished - won by #{contract.buyer.email})"
     %tr
       %td.left Bids
       %td

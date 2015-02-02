@@ -1,8 +1,9 @@
 class Auction < ActiveRecord::Base
   belongs_to :category
-  has_one :contract, dependent: :nullify
   belongs_to :user
   has_many :bids, dependent: :destroy
+  has_one :seller_comment, class_name: "Comment", foreign_key: :auction_id, dependent: :nullify
+  has_one :buyer_comment, class_name: "Comment", foreign_key: :auction_id, dependent: :nullify
 
   validates :category, presence: true
   validates :user, presence: true
@@ -25,6 +26,16 @@ class Auction < ActiveRecord::Base
   validates_datetime :start_date, before: :end_date
 
   validate :up_to_one_bid, if: :instant_auction?
+
+  # Default accessors seem not to work properly, both returning the same
+  # comment, hence the overridden ones below. It's sort of a TODO.
+  def buyer_comment
+    Comment.find_by(id: self.buyer_comment_id)
+  end
+
+  def seller_comment
+    Comment.find_by(id: self.seller_comment_id)
+  end
 
   def instant_auction?
     auction_type == 'instant'
