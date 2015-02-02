@@ -3,26 +3,16 @@ class AuctionsController < ApplicationController
   expose_decorated(:auctions) { parent_object.auctions }
   expose :category
   expose :user
+  expose(:bids) { auction.bids }
+  expose :contract
   expose(:parent) { parent_str }
 
-  def new
-  end
-
   def create
-  end
-
-  def show
-  end
-
-  def index
   end
 
   def destroy
     auction.destroy
     redirect_to category_auctions_url(auction.category), notice: 'Auction deleted successfully'
-  end
-
-  def edit
   end
 
   def update

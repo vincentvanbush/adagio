@@ -1,2 +1,10 @@
-%h1 Bids#new
-%p Find me in app/views/bids/new.html.haml
+%h1
+  Bidding auction:
+  = link_to "#{auction.title}", category_auction_url(auction.category, auction)
+
+= simple_form_for [category, auction, bid] do |f|
+  = render 'shared/error_messages', object: f.object
+  .inputs
+    = f.input :price
+  .actions
+    = f.button :submit
