@@ -31,29 +31,25 @@ puts 'Creating categories...'
       user:         User.all[i % User.count]
     )
 
-    if rand(4) == 0 # for every average of 4 auctions, give it a contract
-      puts "Creating contract for auction #{auction.title}..."
-      contract = Contract.create!(
-        auction: auction,
-        buyer: User.all[rand(User.count)]
-      )
-      contract.update!(
+    if rand(4) == 0 # for every average of 4 auctions, give it comments
+      puts "Creating comments for auction #{auction.title}..."
+      buyer = User.all[rand(User.count)]
+      auction.update!(
         seller_comment_id: Comment.create!(
           comment_type: %w(negative positive neutral)[rand 3],
-          content:      Faker::Lorem.paragraphs(1),
-          contract:     contract,
+          content:      Faker::Lorem.paragraph(20),
+          auction:      auction,
           author:       auction.user,
-          user_for:     contract.buyer
+          user_for:     buyer
         ).id,
         buyer_comment_id: Comment.create!(
           comment_type: %w(negative positive neutral)[rand 3],
-          content:      Faker::Lorem.paragraphs(1),
-          contract:     contract,
-          author:       contract.buyer,
+          content:      Faker::Lorem.paragraph(20),
+          auction:      auction,
+          author:       buyer,
           user_for:     auction.user
         ).id
       )
-      auction.update!(contract_id: contract.id)
     end
   end
 end
