@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150202211544) do
+ActiveRecord::Schema.define(version: 20150202212544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,14 +34,18 @@ ActiveRecord::Schema.define(version: 20150202211544) do
     t.string   "auction_type"
     t.datetime "start_date"
     t.datetime "end_date"
-    t.decimal  "price",        precision: 10, scale: 2
+    t.decimal  "price",             precision: 10, scale: 2
     t.integer  "category_id"
     t.integer  "user_id"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.integer  "seller_comment_id"
+    t.integer  "buyer_comment_id"
   end
 
+  add_index "auctions", ["buyer_comment_id"], name: "index_auctions_on_buyer_comment_id", using: :btree
   add_index "auctions", ["category_id"], name: "index_auctions_on_category_id", using: :btree
+  add_index "auctions", ["seller_comment_id"], name: "index_auctions_on_seller_comment_id", using: :btree
   add_index "auctions", ["user_id"], name: "index_auctions_on_user_id", using: :btree
 
   create_table "bids", force: :cascade do |t|
@@ -91,6 +95,8 @@ ActiveRecord::Schema.define(version: 20150202211544) do
 
   add_foreign_key "addresses", "users"
   add_foreign_key "auctions", "categories"
+  add_foreign_key "auctions", "comments", column: "buyer_comment_id"
+  add_foreign_key "auctions", "comments", column: "seller_comment_id"
   add_foreign_key "auctions", "users"
   add_foreign_key "bids", "auctions"
   add_foreign_key "bids", "users"
