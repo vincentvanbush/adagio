@@ -3,8 +3,8 @@ class Contract < ActiveRecord::Base
 
   belongs_to :buyer, class_name: "User"
 
-  has_one :seller_comment, class_name: "Comment", foreign_key: :contract_id, dependent: :destroy
-  has_one :buyer_comment, class_name: "Comment", foreign_key: :contract_id, dependent: :destroy
+  has_one :seller_comment, class_name: "Comment", foreign_key: :contract_id, dependent: :nullify
+  has_one :buyer_comment, class_name: "Comment", foreign_key: :contract_id, dependent: :nullify
 
   validates :auction, presence: true
   validates :buyer, presence: true

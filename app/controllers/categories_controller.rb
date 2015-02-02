@@ -10,13 +10,12 @@ class CategoriesController < ApplicationController
   def create
   end
 
-  def show
-  end
-
   def index
   end
 
   def destroy
+    category.destroy
+    redirect_to categories_url
   end
 
   def update

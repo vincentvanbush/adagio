@@ -1,2 +1,35 @@
-%h1 Auctions#index
-%p Find me in app/views/auctions/index.html.haml
+%h1
+  = "All auctions"
+  -# %small.float-right
+  -#   = link_to new_category_auction_path(category) do
+  -#     %span.glyphicon.glyphicon-plus
+  -#     New auction
+
+%table.table
+  %tr
+    %th Title
+    %th Auction type
+    %th Price
+    %th Bids
+    %th
+    %th
+
+  - if not auctions.empty?
+    - auctions.each do |auction|
+      %tr
+        %td= link_to auction.title, category_auction_path(auction.category, auction)
+        %td= auction.auction_type
+        %td= auction.current_price
+        %td= auction.bids.count
+        - if current_user and (auction.user == current_user or current_user.admin?)
+          %td= link_to "Edit", edit_category_auction_path(auction.category, auction)
+          %td= link_to "Delete", category_auction_path(auction.category, auction), method: :delete, data: { confirm: 'Sure?' }
+        - else
+          %td &nbsp;
+          %td &nbsp;
+  - else
+    %tr
+      %td.text-center{colspan: 6}
+        There are no auctions in this category.
+
+%br

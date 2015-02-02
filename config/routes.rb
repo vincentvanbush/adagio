@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     resources :auctions, only: :index
   end
 
-  resources :categories do
+  resources :categories, only: [:new, :create, :edit, :update, :destroy, :index] do
     resources :auctions do
       resources :bids, only: [:new, :create]
     end
