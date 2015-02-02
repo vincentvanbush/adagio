@@ -6,7 +6,8 @@ class Bid < ActiveRecord::Base
   validates :user, presence: true
   validates :auction, presence: true
 
-  validate :no_bid_yet, if: :instant_auction?
+  validate :not_finished, on: :create
+  validate :no_bid_yet, if: :instant_auction?, on: :create
   validate :is_best_bid, on: :create
   validate :cannot_bid_own_auction, on: :create
   validate :cannot_outbid_own_bid, on: :create
@@ -16,6 +17,10 @@ class Bid < ActiveRecord::Base
 
   def instant_auction?
     auction.auction_type == 'instant'
+  end
+
+  def not_finished
+    errors.add(:auction, 'has already been finished') if auction.is_finished?
   end
 
   def no_bid_yet
