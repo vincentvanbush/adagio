@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :auctions
-  has_many :contracts
   has_many :bids
   has_many :addresses
+  has_many :issued_comments, class_name: 'Comment', foreign_key: :author_id
+  has_many :received_comments, class_name: 'Comment', foreign_key: :user_for_id
 end
