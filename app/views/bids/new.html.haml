@@ -5,6 +5,6 @@
 = simple_form_for [category, auction, bid] do |f|
   = render 'shared/error_messages', object: f.object
   .inputs
-    = f.input :price
+    = f.input :price, readonly: auction.instant_auction?, input_html: { value: auction.current_price }
   .actions
     = f.button :submit

@@ -42,7 +42,11 @@ class Auction < ActiveRecord::Base
   end
 
   def is_finished?
-    finished_at != nil
+    if auction_type == 'instant'
+      return true if bids.present?
+    elsif auction_type == 'classic'
+      return true if DateTime.now > end_date
+    end
   end
 
   def up_to_one_bid

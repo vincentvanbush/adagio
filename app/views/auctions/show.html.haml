@@ -15,10 +15,13 @@
       %td.left Price
       %td
         = auction.current_price
-        -# - if auction.contract.nil?
-        = link_to "(Make a bid)", new_category_auction_bid_url(category, auction)
-        -# - else
-        -#   = "(Finished - won by #{contract.buyer.email})"
+        - unless auction.is_finished?
+          = link_to "(make a bid)", new_category_auction_bid_url(category, auction)
+        - else
+          - unless auction.winner.nil?
+            = "(finished - winner: #{auction.winner.email})"
+          - else
+            (finished - no offers)
     %tr
       %td.left Bids
       %td
@@ -28,13 +31,3 @@
               = "#{bid.price} (#{bid.user.email})"
         - else
           This auction has no bids yet.
-    -# %tr
-    -# %td.left Add review
-    -# %td= render 'reviews/form'
-    -# - if current_user and (auction.user == current_user or current_user.admin?)
-    -# %td.left Actions
-    -# %td
-    -# = link_to 'Edit', edit_category_auction_path(category.id, auction.id)
-    -# |
-    -# = link_to 'Delete', category_auction_path(category, auction), method: :delete, confirm: 'Are you sure?'
-    -#

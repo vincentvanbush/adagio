@@ -1,7 +1,7 @@
 class BidsController < ApplicationController
   before_action :authenticate_user!
 
-  expose(:auction)
+  expose_decorated(:auction)
   expose(:category) { auction.category }
   expose :bid
   expose(:bids) { auction.bids }
