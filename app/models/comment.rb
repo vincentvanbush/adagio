@@ -8,18 +8,31 @@ class Comment < ActiveRecord::Base
     in: %w(positive negative neutral),
     message: 'its type has to be one of the following: positive negative neutral'
   }
+  validates :content, presence: true
   validates :author, presence: true
   validates :user_for, presence: true
   validates :auction, presence: true
 
   validate :auction_finished, on: :create
   validate :proper_users, on: :create
+  validate :auction_not_commented_yet, on: :create
+
+  private
 
   def auction_finished
-    auction.is_finished?
+    errors.add(:auction, 'is not finished') unless auction.is_finished?
   end
 
   def proper_users
-    [[auction.user, auction.winner], [auction.winner, auction.user]].include? [author, user_for]
+    combinations = [[auction.user, auction.winner], [auction.winner, auction.user]]
+    errors.add(:author, 'does not match the other user') unless combinations.include? [author, user_for]
+  end
+
+  def auction_not_commented_yet
+    if author == auction.user
+      errors.add(:auction, 'already has a seller comment') if auction.seller_comment.present?
+    elsif author == auction.winner
+      errors.add(:auction, 'already has a buyer comment') if auction.buyer_comment.present?
+    end
   end
 end

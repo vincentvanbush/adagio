@@ -1,0 +1,12 @@
+%h1
+  New comment for auction:
+  = link_to auction.title, category_auction_url(auction.category, auction)
+
+= simple_form_for [auction, comment] do |f|
+  = render 'shared/error_messages', object: f.object
+
+  .inputs
+    = f.input :content, as: :text
+    = f.input :comment_type, as: :radio_buttons, collection: [:positive, :negative, :neutral]
+  .actions
+    = f.button :submit

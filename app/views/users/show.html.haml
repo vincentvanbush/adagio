@@ -1,0 +1,94 @@
+%h3= "User: #{@user.name}"
+%p= "Email: #{@user.email}"
+
+.row
+
+  .col-md-7
+    .panel.panel-default
+      .panel-heading
+        Latest auctions created by user
+      .panel-body
+        %table.table
+          %tr
+            %th Auction
+            %th Type
+            %th Ends at
+            %th Bids
+            %th
+              .pull-right Price
+          - @user.auctions.order(:start_date).last(10).each do |auction|
+            %tr
+              %td= link_to "#{auction.title}", category_auction_url(auction.category, auction)
+              %td= auction.auction_type
+              %td
+                - if auction.is_finished?
+                  Finished
+                - else
+                  = auction.end_date.in_time_zone('Warsaw').to_formatted_s(:long)
+              %td= auction.bids.count
+              %td
+                .pull-right= auction.price
+          %tr
+            %td{colspan: 5}
+              .pull-right= link_to "See all #{@user.auctions.count} auctions...", user_auctions_url(@user)
+      .panel-heading
+        Latest auctions won by user
+      .panel-body
+        %table.table
+          %tr
+            %th Auction
+            %th Created by
+            %th Price
+            %th
+          - @user.won_auctions.sort_by { |a| a.created_at }.last(5).each do |auction|
+            %tr
+              %td= link_to "#{auction.title}", category_auction_url(auction.category, auction)
+              %td= link_to auction.user.email, auction.user
+              %td= auction.price
+              %td
+                - if user_signed_in? && auction.winner == current_user && auction.buyer_comment.blank?
+                  = link_to "Create comment", new_auction_comment_url(auction)
+      .panel-heading
+        Latest finished auctions created by user
+      .panel-body
+        %table.table
+          %tr
+            %th Auction
+            %th Winner
+            %th Price
+            %th
+          - @user.auctions.select { |a| a.is_finished? }.each do |auction|
+            %tr
+              %td= link_to "#{auction.title}", category_auction_url(auction.category, auction)
+              %td
+                - if auction.bids.present?
+                  = link_to auction.winner.email, auction.winner
+                - else
+                  No bids
+              %td= auction.price
+              %td
+                - if current_user == auction.user && auction.bids.present? && auction.seller_comment.blank?
+                  = link_to "Create comment", new_auction_comment_url(auction)
+
+  .col-md-5
+    .panel.panel-default
+      .panel-heading
+        = "Comments received by user (positive: #{@user.positive_comment_rate * 100}%)"
+      .panel-body
+        %table.table.small
+          - @user.received_comments.order(:created_at).last(10).each do |comment|
+            %tr{class: comment_class_for(comment)}
+              %td.col-md-3
+                = "#{comment.comment_type} from "
+                = link_to excerpt(comment.author.email, '', radius: 7), comment.author
+              %td.col-md-7= excerpt(comment.content, '', separator: ' ', radius: 20)
+              %td.col-md-2= link_to 'auction', category_auction_url(comment.auction.category, comment.auction)
+          %tr
+            %td{colspan: 3}
+              .pull-right= link_to "See all #{@user.received_comments.count} comments...", user_received_comments_url(@user)
+
+.row
+
+  .col-md-12
+    .panel.panel-default
+      .panel-heading

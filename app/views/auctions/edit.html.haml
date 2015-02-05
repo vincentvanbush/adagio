@@ -1,2 +1,9 @@
-%h1 Auctions#edit
-%p Find me in app/views/auctions/edit.html.haml
+%h1 Editing auction
+
+= simple_form_for [category, auction] do |f|
+  = render 'shared/error_messages', object: f.object
+  .inputs
+    = f.input :category_id, collection: Category.all
+    = f.input :description, as: :text
+  .actions
+    = f.button :submit

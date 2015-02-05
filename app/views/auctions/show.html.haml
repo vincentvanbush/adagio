@@ -23,9 +23,11 @@
     - if auction.user == current_user
       .alert.alert-info
         This is your auction.
-        - if auction.winner.present?
+        - if auction.is_finished? && auction.winner.present?
           = "It has been finished and the winner is"
           %b= link_to auction.winner.email, auction.winner
+        - elsif auction.is_finished?
+          = "It has been finished with no bids."
         - else
           It has not been finished yet.
     %tr
@@ -45,6 +47,9 @@
             = "(finished - winner: #{auction.winner.email})"
           - else
             (finished - no offers)
+    %tr
+      %td.left End date
+      %td= auction.end_date.in_time_zone('Warsaw').to_formatted_s(:long)
     %tr
       %td.left Bids
       %td

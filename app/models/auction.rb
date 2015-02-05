@@ -27,6 +27,11 @@ class Auction < ActiveRecord::Base
 
   validate :up_to_one_bid, if: :instant_auction?
 
+  def self.search(by)
+    search_condition = ("%" + by + "%").downcase
+    Auction.all.where(['lower(title) like ? or lower(description) like ?', search_condition, search_condition])
+  end
+
   # Default accessors seem not to work properly, both returning the same
   # comment, hence the overridden ones below. It's sort of a TODO.
   def buyer_comment

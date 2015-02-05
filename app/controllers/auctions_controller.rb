@@ -22,6 +22,15 @@ class AuctionsController < ApplicationController
     end
   end
 
+  def update
+    self.auction = Auction.find(params['id'])
+    if auction.update(update_params)
+      redirect_to category_auction_url(auction.category, auction), notice: 'Auction successfully updated'
+    else
+      render 'auctions/edit'
+    end
+  end
+
   def destroy
     auction.destroy
     redirect_to category_auctions_url(auction.category), notice: 'Auction deleted successfully'
@@ -33,8 +42,10 @@ class AuctionsController < ApplicationController
     if parent_object.nil?
       filtered = Auction.all
     else
-      filtered = parent_object.auctions.paginate(page: params['page'], per_page: 30)
+      filtered = parent_object.auctions
     end
+    filtered = filtered.search(params['search']) if params['search'].present?
+    filtered = filtered.paginate(page: params['page'], per_page: 30)
   end
 
   def parent_object
@@ -54,6 +65,10 @@ class AuctionsController < ApplicationController
   end
 
   def auction_params
-    params.require(:auction).permit(:price, :title, :description, :auction_type, :start_date, :end_date, :category_id, :user_id)
+    params.require(:auction).permit(:id, :price, :title, :description, :auction_type, :start_date, :end_date, :category_id, :user_id)
+  end
+
+  def update_params
+    params['auction'].permit(:description, :category_id)
   end
 end

@@ -1,5 +1,8 @@
 %h1
   = "All auctions: #{parent}"
+- if params['search'].present?
+  %h2
+    = "Filtered by: #{params['search']}"
 
   %small.float-right
     = link_to new_auction_path do
@@ -13,6 +16,7 @@
       %th Auction type
       %th Price
       %th Bids
+      %th End date
       %th Created by
       %th
       %th
@@ -31,14 +35,11 @@
           %td= auction.auction_type
           %td= auction.current_price
           %td= auction.bids.count
+          %td= auction.end_date.in_time_zone('Warsaw').to_formatted_s(:long)
+          %td= link_to auction.user.name, auction.user
           - if current_user and (auction.user == current_user or current_user.admin?)
             %td= link_to "Edit", edit_category_auction_path(auction.category, auction)
             %td= link_to "Delete", category_auction_path(auction.category, auction), method: :delete, data: { confirm: 'Sure?' }
           - else
             %td &nbsp;
             %td &nbsp;
-          %td= link_to auction.user.name, auction.user
-    - else
-      %tr
-        %td.text-center{colspan: 7}
-          There are no auctions in this category.

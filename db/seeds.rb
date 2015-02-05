@@ -8,6 +8,8 @@
 user = CreateAdminService.new.call
 puts 'CREATED ADMIN USER: ' << user.email
 
+ActiveRecord::Base.connection.execute("CREATE OR REPLACE FUNCTION positive_percentage(uid integer) RETURNS FLOAT AS $$ BEGIN IF (select count(*) from comments where user_for_id = uid) = 0 THEN RETURN 0; END IF; RETURN (select cast(count(*) as float) from comments where user_for_id = uid and comment_type = 'positive') / (select cast(count(*) as float) from comments where user_for_id = uid); END; $$ LANGUAGE plpgsql")
+
 puts 'Creating users...'
 10.times do
   user = User.find_or_create_by!(email: Faker::Internet.email) do |user|
@@ -33,25 +35,25 @@ puts 'Creating categories...'
       user:         User.all[i % User.count]
     )
 
-    if rand(4) == 0 # for every average of 4 auctions, give it comments
-      puts "Creating comments for auction #{auction.title}..."
-      buyer = User.all[rand(User.count)]
-      auction.update!(
-        seller_comment_id: Comment.create!(
-          comment_type: %w(negative positive neutral)[rand 3],
-          content:      Faker::Lorem.paragraph(20),
-          auction:      auction,
-          author:       auction.user,
-          user_for:     buyer
-        ).id,
-        buyer_comment_id: Comment.create!(
-          comment_type: %w(negative positive neutral)[rand 3],
-          content:      Faker::Lorem.paragraph(20),
-          auction:      auction,
-          author:       buyer,
-          user_for:     auction.user
-        ).id
-      )
-    end
+    # if rand(4) == 0 # for every average of 4 auctions, give it comments
+    #   puts "Creating comments for auction #{auction.title}..."
+    #   buyer = User.all[rand(User.count)]
+    #   auction.update!(
+    #     seller_comment_id: Comment.create!(
+    #       comment_type: %w(negative positive neutral)[rand 3],
+    #       content:      Faker::Lorem.paragraph(20),
+    #       auction:      auction,
+    #       author:       auction.user,
+    #       user_for:     buyer
+    #     ).id,
+    #     buyer_comment_id: Comment.create!(
+    #       comment_type: %w(negative positive neutral)[rand 3],
+    #       content:      Faker::Lorem.paragraph(20),
+    #       auction:      auction,
+    #       author:       buyer,
+    #       user_for:     auction.user
+    #     ).id
+    #   )
+    # end
   end
 end
