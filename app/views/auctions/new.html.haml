@@ -1,2 +1,13 @@
-%h1 Auctions#new
-%p Find me in app/views/auctions/new.html.haml
+%h1 Create a new auction
+
+= simple_form_for auction do |f|
+  = render 'shared/error_messages', object: f.object
+  .inputs
+    = f.input :title
+    = f.input :category_id, collection: Category.all
+    = f.input :description, as: :text
+    = f.input :auction_type, as: :radio_buttons, collection: [:instant, :classic]
+    = f.input :price
+    = f.input :end_date, as: :datetime_picker
+  .actions
+    = f.button :submit

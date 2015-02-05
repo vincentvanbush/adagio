@@ -12,6 +12,8 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
   gem 'spring'
 end
+gem 'iso-iban'
+gem 'will_paginate'
 gem 'validates_timeliness', '~> 3.0'
 gem 'bootstrap-sass'
 gem 'devise'
@@ -19,6 +21,8 @@ gem 'decent_exposure'
 gem 'draper'
 gem 'decent_decoration'
 gem 'haml-rails'
+gem 'momentjs-rails', '>= 2.8.1', :github => 'derekprior/momentjs-rails'
+gem 'datetimepicker-rails', github: 'zpaulovics/datetimepicker-rails', branch: 'master', submodules: true
 gem 'high_voltage'
 gem 'pg'
 gem 'simple_form'

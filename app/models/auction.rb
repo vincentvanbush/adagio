@@ -7,7 +7,7 @@ class Auction < ActiveRecord::Base
 
   validates :category, presence: true
   validates :user, presence: true
-  validates :price, presence: true, numericality: true
+  validates :price, presence: true, numericality: { greater_than: 0, less_than: 100000000 }
 
   validates :auction_type, inclusion: {
     in: %w(instant classic),
@@ -16,11 +16,11 @@ class Auction < ActiveRecord::Base
 
   validates :title, presence: true, allow_blank: false, length: {
     maximum: 40,
-    too_long: "its length has to be up to 40"
+    too_long: "length has to be up to 40"
   }
   validates :description, presence: true, allow_blank: false, length: {
     maximum: 1000,
-    too_long: "its length has to be up to 1000"
+    too_long: "length has to be up to 1000"
   }
 
   validates_datetime :start_date, before: :end_date
@@ -41,6 +41,10 @@ class Auction < ActiveRecord::Base
     auction_type == 'instant'
   end
 
+  def has_bids_by?(user)
+    true unless bids.all.select { |b| b.user == user }.blank?
+  end
+
   def is_finished?
     if auction_type == 'instant'
       return true if bids.present?
@@ -50,6 +54,11 @@ class Auction < ActiveRecord::Base
   end
 
   def up_to_one_bid
-    errors.add(:bids, "should be limited to 1 for an instant") if bids.count > 1
+    errors.add(:bids, "number should be limited to 1 for an instant") if bids.count > 1
+  end
+
+  def winner
+    return bids.order('price desc').first.user if bids.present?
+    return nil
   end
 end

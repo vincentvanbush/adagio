@@ -6,9 +6,6 @@ class BidsController < ApplicationController
   expose :bid
   expose(:bids) { auction.bids }
 
-  def new
-  end
-
   def create
     self.bid = Bid.new(bid_params)
     bid.user = current_user

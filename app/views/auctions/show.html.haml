@@ -5,18 +5,41 @@
     = auction.title
 
   %table.table.summary-table
+    - if user_signed_in? && auction.is_finished? && auction.winner == current_user
+      .alert.alert-info
+        %b
+          = "Congratulations, you have won this auction."
+          %br
+        = "Please transfer #{auction.current_price} to the following bank account:"
+        %br
+        = ISO::IBAN.parse(auction.user.account_number).formatted
+    - elsif auction.has_bids_by? current_user
+      .alert.alert-info
+        = "You have bid #{pluralize(auction.bids_count_by(current_user), 'time')} in this auction."
+        - if auction.winner == current_user
+          Your bid is currently the highest.
+        - else
+          You have been outbid.
+    - if auction.user == current_user
+      .alert.alert-info
+        This is your auction.
+        - if auction.winner.present?
+          = "It has been finished and the winner is"
+          %b= link_to auction.winner.email, auction.winner
+        - else
+          It has not been finished yet.
     %tr
       %td.left Description
       %td= auction.description
     %tr
       %td.left Added by
-      %td= link_to user.email, user
+      %td= link_to auction.user.email, auction.user
     %tr
       %td.left Price
       %td
         = auction.current_price
         - unless auction.is_finished?
-          = link_to "(make a bid)", new_category_auction_bid_url(category, auction)
+          = auction.bid_link
         - else
           - unless auction.winner.nil?
             = "(finished - winner: #{auction.winner.email})"

@@ -11,4 +11,15 @@ class Comment < ActiveRecord::Base
   validates :author, presence: true
   validates :user_for, presence: true
   validates :auction, presence: true
+
+  validate :auction_finished, on: :create
+  validate :proper_users, on: :create
+
+  def auction_finished
+    auction.is_finished?
+  end
+
+  def proper_users
+    [[auction.user, auction.winner], [auction.winner, auction.user]].include? [author, user_for]
+  end
 end

@@ -12,6 +12,8 @@ puts 'Creating users...'
 10.times do
   user = User.find_or_create_by!(email: Faker::Internet.email) do |user|
     user.password = 'testtest'
+    user.name = Faker::Name.name
+    user.account_number = ISO::IBAN.generate('PL', '', '').compact
   end
 end
 
@@ -20,8 +22,8 @@ puts 'Creating categories...'
   category = Category.create!(title: Faker::Commerce.department)
 
   puts "Creating auctions for category #{category.title}..."
-  20.times do |i|
-    auction = category.auctions.create!(
+  100.times do |i|
+    auction = category.auctions.create(
       title:        Faker::Commerce.product_name,
       description:  Faker::Lorem.paragraphs(2),
       auction_type: %w(classic instant)[rand 2],

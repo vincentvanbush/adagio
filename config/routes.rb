@@ -10,4 +10,6 @@ Rails.application.routes.draw do
       resources :bids, only: [:new, :create]
     end
   end
+
+  resources :auctions, only: [:new, :create, :update, :destroy]
 end
