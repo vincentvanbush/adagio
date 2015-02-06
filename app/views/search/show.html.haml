@@ -1,0 +1,30 @@
+%h1 Search auctions
+-# = params
+= form_tag auctions_path, method: 'get' do
+  .inputs
+    .form-group
+      = label_tag 'Title'
+      = text_field_tag 'title', '', placeholder: 'Title', class: 'form-control'
+      .checkbox
+        = label_tag do
+          = check_box_tag 'also_descriptions', '1', false, class: 'accept_tos'
+          Also in descriptions
+    .form-group
+      = label_tag 'Price boundaries'
+      = text_field_tag 'min_price', '', placeholder: 'Minimum price', class: 'form-control'
+      = text_field_tag 'max_price', '', placeholder: 'Maximum price', class: 'form-control'
+    .form-group
+      = label_tag 'Auction type'
+      .radio
+        = label_tag do
+          = radio_button_tag 'auction_type', '', true
+          Any
+        = label_tag do
+          = radio_button_tag 'auction_type', 'classic'
+          Classic
+        = label_tag do
+          = radio_button_tag 'auction_type', 'instant'
+          Instant
+
+  .actions
+    = submit_tag "Search", name: nil, class: "btn btn-default"

@@ -27,9 +27,25 @@ class Auction < ActiveRecord::Base
 
   validate :up_to_one_bid, if: :instant_auction?
 
-  def self.search(by)
+  def self.search_title(by, also_descriptions)
     search_condition = ("%" + by + "%").downcase
-    Auction.all.where(['lower(title) like ? or lower(description) like ?', search_condition, search_condition])
+    if also_descriptions
+      where(['lower(title) like ? or lower(description) like ?', search_condition, search_condition])
+    else
+      where(['lower(title) like ?', search_condition])
+    end
+  end
+
+  def self.search_min_price(min)
+    where(['price >= ?', min.to_f])
+  end
+
+  def self.search_max_price(max)
+    where(['price <= ?', max.to_f])
+  end
+
+  def self.search_auction_type(auc_t)
+    where(['auction_type = ?', auc_t])
   end
 
   # Default accessors seem not to work properly, both returning the same

@@ -1,13 +1,22 @@
 %h1
   = "All auctions: #{parent}"
-- if params['search'].present?
-  %h2
-    = "Filtered by: #{params['search']}"
+- if params['title'].present?
+  %h4
+    = "Title: #{params['title']}"
+    - if params['also_descriptions']
+      (also in descriptions)
+- if params['min_price'].present?
+  %h4= "Minimum price: #{params['min_price']}"
+- if params['max_price'].present?
+  %h4= "Maximum price: #{params['max_price']}"
+- if params['auction_type'].present?
+  %h4= "Auction type: #{params['auction_type']}"
 
-  %small.float-right
-    = link_to new_auction_path do
-      %span.glyphicon.glyphicon-plus
-      New auction
+
+%small.float-right
+  = link_to new_auction_path do
+    %span.glyphicon.glyphicon-plus
+    New auction
 
 %table.table
   %thead

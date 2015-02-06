@@ -44,7 +44,10 @@ class AuctionsController < ApplicationController
     else
       filtered = parent_object.auctions
     end
-    filtered = filtered.search(params['search']) if params['search'].present?
+    filtered = filtered.search_title(params['title'], params['also_descriptions'].present?) if params['title'].present?
+    filtered = filtered.search_min_price(BigDecimal.new(params['min_price'])) if params['min_price'].present?
+    filtered = filtered.search_max_price(BigDecimal.new(params['max_price'])) if params['max_price'].present?
+    filtered = filtered.search_auction_type(params['auction_type']) if params['auction_type'].present?
     filtered = filtered.paginate(page: params['page'], per_page: 30)
   end
 
