@@ -26,6 +26,15 @@
         - if auction.is_finished? && auction.winner.present?
           = "It has been finished and the winner is"
           %b= link_to auction.winner.email, auction.winner
+          %br
+          %b= "When you're paid, don't wait to send the subject to the following address: "
+          %p
+            = auction.winner.street
+            = auction.winner.house_number
+            %br
+            = auction.winner.postal_code
+            = auction.winner.city
+
         - elsif auction.is_finished?
           = "It has been finished with no bids."
         - else

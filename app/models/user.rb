@@ -7,9 +7,13 @@ class User < ActiveRecord::Base
 
   has_many :auctions
   has_many :bids
-  has_many :addresses
   has_many :issued_comments, class_name: 'Comment', foreign_key: :author_id
   has_many :received_comments, class_name: 'Comment', foreign_key: :user_for_id
+
+  validates :street, presence: true, allow_blank: false, length: { maximum: 100 }
+  validates :city, presence: true, allow_blank: false, length: { maximum: 100 }
+  validates :house_number, presence: true, allow_blank: false, length: { maximum: 10 }
+  validates :postal_code, presence: true, format: { with: /[0-9]{2}\-[0-9]{3}/ }
 
   validate :iban_valid
 
