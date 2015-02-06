@@ -1,0 +1,24 @@
+%h1
+  = "Comments received by user:"
+  = link_to user_for.email, user_url(user_for)
+
+%table.table
+  - comments.order(:created_at).each do |comment|
+    %tr{class: comment_class_for(comment)}
+      %td.col-md-3
+        = "#{comment.comment_type} from "
+        = link_to excerpt(comment.author.email, '', radius: 7), comment.author
+      %td.col-md-7= excerpt(comment.content, '', separator: ' ', radius: 20)
+      %td.col-md-2= link_to 'auction', category_auction_url(comment.auction.category, comment.auction)
+
+%h1
+  = "Additionally, comments issued by user:"
+
+%table.table
+  - issued_comments.order(:created_at).each do |comment|
+    %tr{class: comment_class_for(comment)}
+      %td.col-md-3
+        = "#{comment.comment_type} from "
+        = link_to excerpt(comment.author.email, '', radius: 7), comment.author
+      %td.col-md-7= excerpt(comment.content, '', separator: ' ', radius: 20)
+      %td.col-md-2= link_to 'auction', category_auction_url(comment.auction.category, comment.auction)

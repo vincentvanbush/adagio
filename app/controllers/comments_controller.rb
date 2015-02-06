@@ -1,7 +1,13 @@
 class CommentsController < ApplicationController
   expose :auction
   expose :comment
+  expose(:user_for) { User.find(params['user_id']) }
+  expose(:comments) { user_for.received_comments }
+  expose(:issued_comments) { user_for.issued_comments }
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
+
+  def index
+  end
 
   def create
     self.comment = Comment.new(comment_params)

@@ -7,6 +7,8 @@ class Auction < ActiveRecord::Base
 
   validates :category, presence: true
   validates :user, presence: true
+  validates :start_date, presence: true
+  validates :end_date, presence: true
   validates :price, presence: true, numericality: { greater_than: 0, less_than: 100000000 }
 
   validates :auction_type, inclusion: {

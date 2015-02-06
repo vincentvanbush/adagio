@@ -12,4 +12,12 @@
       %ul.nav.navbar-nav
         = render 'layouts/navigation_links'
       %ul.nav.navbar-nav.navbar-right
-        %li= link_to 'Search', search_url, class: 'navbar-brand'
+        %li= link_to 'Advanced search', search_url, class: 'navbar-brand'
+      = form_tag auctions_path, method: 'get', class: 'navbar-form form-inline pull-right' do
+        = text_field_tag 'title', '', placeholder: 'Search all auctions', class: 'form-control'
+        = submit_tag "Search", name: nil, class: "btn btn-default"
+      -# <form class="navbar-form form-inline pull-right">
+      -# <input type="text" placeholder="Email">
+      -# <input type="password" placeholder="Password">
+      -# <button type="submit" class="btn">Sign in</button>
+      -# </form>
