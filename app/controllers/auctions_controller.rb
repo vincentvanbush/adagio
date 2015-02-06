@@ -36,6 +36,11 @@ class AuctionsController < ApplicationController
     redirect_to category_auctions_url(auction.category), notice: 'Auction deleted successfully'
   end
 
+  def end_prematurely
+    auction.end_prematurely
+    redirect_to category_auction_url(auction.category, auction), notice: 'Auction ended prematurely'
+  end
+
   private
 
   def filtered_auctions

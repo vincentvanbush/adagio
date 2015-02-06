@@ -8,7 +8,22 @@
 user = CreateAdminService.new.call
 puts 'CREATED ADMIN USER: ' << user.email
 
-ActiveRecord::Base.connection.execute("CREATE OR REPLACE FUNCTION positive_percentage(uid integer) RETURNS FLOAT AS $$ BEGIN IF (select count(*) from comments where user_for_id = uid) = 0 THEN RETURN 0; END IF; RETURN (select cast(count(*) as float) from comments where user_for_id = uid and comment_type = 'positive') / (select cast(count(*) as float) from comments where user_for_id = uid); END; $$ LANGUAGE plpgsql")
+ActiveRecord::Base.connection.execute("
+  CREATE OR REPLACE FUNCTION positive_percentage(uid integer) RETURNS FLOAT AS $$
+  BEGIN
+    IF (select count(*) from comments where user_for_id = uid) = 0 THEN
+      RETURN 0;
+    END IF;
+    RETURN (select cast(count(*) as float) from comments where user_for_id = uid and comment_type = 'positive')
+      / (select cast(count(*) as float) from comments where user_for_id = uid);
+    END; $$ LANGUAGE plpgsql")
+
+ActiveRecord::Base.connection.execute("
+create or replace function end_auction(aid integer) returns void as $$
+begin
+   update auctions set end_date = current_timestamp where id = aid;
+end; $$ language plpgsql")
+
 
 puts 'Creating users...'
 10.times do

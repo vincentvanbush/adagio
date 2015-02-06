@@ -1,2 +1,8 @@
-%h1 Categories#new
-%p Find me in app/views/categories/new.html.haml
+%h1 New category
+
+= simple_form_for category do |f|
+  = render 'shared/error_messages', object: f.object
+  .inputs
+    = f.input :title
+  .actions
+    = f.button :submit

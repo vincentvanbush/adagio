@@ -38,7 +38,9 @@
         - elsif auction.is_finished?
           = "It has been finished with no bids."
         - else
-          It has not been finished yet.
+          It has not been finished yet. You can
+          = link_to 'end it prematurely', auction_end_prematurely_url(auction)
+          if you like.
     %tr
       %td.left Description
       %td= auction.description

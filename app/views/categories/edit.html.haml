@@ -1,2 +1,8 @@
-%h1 Categories#edit
-%p Find me in app/views/categories/edit.html.haml
+%h1= "Editing category: #{category.title}"
+
+= simple_form_for category do |f|
+  = render 'shared/error_messages', object: f.object
+  .inputs
+    = f.input :title
+  .actions
+    = f.button :submit

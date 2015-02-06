@@ -29,6 +29,13 @@ class Auction < ActiveRecord::Base
 
   validate :up_to_one_bid, if: :instant_auction?
 
+  # This is ugly as hell, but it's a part of our school assignment to do it
+  # like this. Sorry.
+  def end_prematurely
+    connection = ActiveRecord::Base.connection.raw_connection
+    connection.exec("select end_auction(#{id})")
+  end
+
   def self.search_title(by, also_descriptions)
     search_condition = ("%" + by + "%").downcase
     if also_descriptions

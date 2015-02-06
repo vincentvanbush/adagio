@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   end
 
   get '/search', to: 'search#show'
+  get '/auctions/:id/end_prematurely', to: 'auctions#end_prematurely', as: 'auction_end_prematurely'
 
   resources :categories, only: [:new, :create, :edit, :update, :destroy, :index] do
     resources :auctions do
