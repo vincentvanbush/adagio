@@ -11,22 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150205125325) do
+ActiveRecord::Schema.define(version: 20150206013207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "addresses", force: :cascade do |t|
-    t.string   "city"
-    t.string   "postal_code"
-    t.string   "street"
-    t.string   "house_number"
-    t.integer  "user_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
 
   create_table "auctions", force: :cascade do |t|
     t.string   "title"
@@ -93,12 +81,15 @@ ActiveRecord::Schema.define(version: 20150205125325) do
     t.string   "name"
     t.boolean  "admin"
     t.string   "account_number"
+    t.string   "city"
+    t.string   "postal_code"
+    t.string   "street"
+    t.string   "house_number"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
-  add_foreign_key "addresses", "users"
   add_foreign_key "auctions", "categories"
   add_foreign_key "auctions", "comments", column: "buyer_comment_id"
   add_foreign_key "auctions", "comments", column: "seller_comment_id"

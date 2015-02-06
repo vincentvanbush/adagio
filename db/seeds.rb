@@ -16,6 +16,10 @@ puts 'Creating users...'
     user.password = 'testtest'
     user.name = Faker::Name.name
     user.account_number = ISO::IBAN.generate('PL', '', '').compact
+    user.city = Faker::Address.city
+    user.street = Faker::Address.street_name
+    user.house_number = Faker::Address.building_number
+    user.postal_code = "12-345"
   end
 end
 
