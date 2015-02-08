@@ -1,6 +1,6 @@
 %h1
   = "Comments received by user:"
-  = link_to user_for.email, user_url(user_for)
+  = link_to user.email, user_url(user)
 
 %table.table
   - comments.order(:created_at).each do |comment|

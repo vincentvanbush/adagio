@@ -1,9 +1,9 @@
 class CommentsController < ApplicationController
   expose :auction
   expose :comment
-  expose(:user_for) { User.find(params['user_id']) }
-  expose(:comments) { user_for.received_comments }
-  expose(:issued_comments) { user_for.issued_comments }
+  expose(:user) # { User.find(params['user_id']) }
+  expose(:comments) { user.received_comments }
+  expose(:issued_comments) { user.issued_comments }
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def index
@@ -19,7 +19,7 @@ class CommentsController < ApplicationController
       if current_user == auction.winner
         auction.update!(buyer_comment_id: comment.id)
       elsif current_user == auction.user
-        auction.update!(seller_comment: comment.id)
+        auction.update!(seller_comment_id: comment.id)
       end
       redirect_to user_url(current_user), notice: 'Comment successfully added'
     else
